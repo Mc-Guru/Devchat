@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
+const socketio = require('socket.io');
 const io = require('socket.io')(server);
 
 app.use(express.static(__dirname + '/public'));
