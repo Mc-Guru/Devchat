@@ -1,12 +1,23 @@
-const express = require("express")
+const express = require('express');
 const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
-const PORT = process.env.PORT | 5000;
+app.use(express.static(__dirname + '/public'));
 
-app.get('/',(req,res)=>{
-    res.json({message:"Hello, I'm from backend !"})
-})
+io.on('connection', (socket) => {
+  console.log('a user connected');
 
-app.listen(PORT, ()=> {
-    console.log(`Server is listening on ${PORT}...`)
-})
+  socket.on('chat message', (msg) => {
+    console.log('message: ' + msg);
+    io.emit('chat message', msg);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+
+server.listen(3000, () => {
+  console.log('listening on *:3000');
+});
